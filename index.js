@@ -88,5 +88,55 @@ module.exports = {
                 })
             })
         }
+    },
+    calc: {
+        name: 'calc',
+        description: 'Add calculator commands',
+        init(api) {
+            api.addCommand('rpn', (from, to, msg) => {
+                let commands = msg.split(' ')
+
+                let stack = []
+
+                let d = true
+
+                commands.forEach(command => {
+                    if (!isNaN(parseFloat(command)) && isFinite(command)) {
+                        stack.push(parseInt(command))
+                    } else {
+                        let a = stack.pop()
+                        let b = stack.pop()
+                        switch (command) {
+                            case '+':
+                                stack.push(a + b)
+                                break
+                            case '-':
+                                stack.push(b - a)
+                                break
+                            case '*':
+                                stack.push(a * b)
+                                break
+                            case '/':
+                                stack.push(b / a)
+                                break
+                            case '^':
+                                stack.push(Math.pow(b, a))
+                                break
+                            default:
+                                api.say(to, `${from}: ${command} isn't an operator`)
+                                d = false
+                                break
+                        }
+                    }
+                })
+
+                if (d) {
+                    if (stack.length)
+                        api.say(to, `${from}: ${stack[0]}`)
+                    else
+                        api.say(to, `${from}: The stack turned out empty.`)
+                }
+            })
+        },
     }
 }
