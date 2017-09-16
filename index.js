@@ -1,6 +1,8 @@
 let fs = require('fs')
 let path = require('path')
 
+let rp = require('request-promise')
+
 module.exports = {
     ideagen: {
         name: 'ideagen',
@@ -53,6 +55,37 @@ module.exports = {
                 })
 
                 api.say(to, name.join(' '))
+            })
+        }
+    },
+    ld: {
+        name: 'ld',
+        description: 'Find games for a user',
+        init (api) {
+            api.addCommand('find', (from, to, msg) => {
+                let user = msg.split(' ')[0]
+                if (user === '')
+                    user = from 
+
+                rp(`https://api.ldjam.com/vx/node/walk/1/users/${user}/`)
+                .then(res => {
+                    let s = JSON.parse(res)
+                    if (s.extra.length) {
+                        api.say(to, `User ${user} not found.`)
+                    } else {
+                        rp(`https://api.ldjam.com/vx/node/feed/${s.node}/authors/item/game?limit=1`).then(res => {
+                            let s = JSON.parse(res)
+                            if (s.feed.length) {
+                                rp(`https://api.ldjam.com/vx/node/get/${s.feed[0].id}/`).then(res => {
+                                    let s = JSON.parse(res).node[0]
+                                    api.say(to, `"${s.name}" by ${user}: https://ldjam.com${s.path}`)
+                                })
+                            } else {
+                                api.say(to, `User ${user} has no games.`)
+                            }
+                        })
+                    }
+                })
             })
         }
     }
