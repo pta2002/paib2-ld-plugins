@@ -162,13 +162,13 @@ module.exports = {
       api.addCommand('seen', (from, to, args) => {
         if (args.length > 0) {
           knex('logs').select('posted', 'message').where({
-            from: args,
+            from: args.trim(),
             to: to
           }).orderBy('posted', 'desc').first().then(result => {
             if (result) {
-              api.say(to, `${from}: User ${args} was last seen ${moment(result.posted).fromNow()} saying "${result.message}"`)
+              api.say(to, `${from}: User ${args.trim()} was last seen ${moment(result.posted).fromNow()} saying "${result.message}"`)
             } else {
-              api.say(to, `${from}: User ${args} not found`)
+              api.say(to, `${from}: User ${args.trim()} not found`)
             }
           })
         } else {
