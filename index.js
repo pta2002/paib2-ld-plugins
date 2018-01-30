@@ -30,10 +30,7 @@ module.exports = {
         let part2 = this.ikeasections.list2[Math.floor(Math.random() * this.ikeasections.list2.length)]
         let part3 = this.ikeasections.list3[Math.floor(Math.random() * this.ikeasections.list3.length)]
 
-        let n = ''
-        if (['a', 'e', 'i', 'o', 'u'].indexOf(part1[0].toLowerCase()) >= 0) { n = 'n' }
-
-        api.say(to, `Make a${n} ${part1} ${part2} ${part3}!`)
+        api.say(to, `Make ${part1} ${part2} ${part3}!`)
       })
 
 
