@@ -11,6 +11,7 @@ module.exports = {
     description: 'Generate game ideas and names',
     init (api) {
       this.ideasections = require('./ideasections')
+      this.ikeasections = require('./ikeasections')
       this.names = fs.readFileSync(path.join(__dirname, 'video_game_names.txt'), 'utf8')
 
       api.addCommand('idea', (from, to, msg) => {
@@ -23,6 +24,18 @@ module.exports = {
 
         api.say(to, `Make a${n} ${part1} ${part2} ${part3}!`)
       })
+
+      api.addCommand('ikea', (from, to, msg) => {
+        let part1 = this.ikeasections.list1[Math.floor(Math.random() * this.ikeasections.list1.length)]
+        let part2 = this.ikeasections.list2[Math.floor(Math.random() * this.ikeasections.list2.length)]
+        let part3 = this.ikeasections.list3[Math.floor(Math.random() * this.ikeasections.list3.length)]
+
+        let n = ''
+        if (['a', 'e', 'i', 'o', 'u'].indexOf(part1[0].toLowerCase()) >= 0) { n = 'n' }
+
+        api.say(to, `Make a${n} ${part1} ${part2} ${part3}!`)
+      })
+
 
       api.addCommand('name', (from, to, msg) => {
                 // List from https://videogamena.me/video_game_names.txt
